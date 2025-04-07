@@ -1,0 +1,151 @@
+"""Dictionary functions"""
+
+__author__: str = "730772722"
+
+
+def invert(input_dict: dict[str, str]) -> dict[str, str]:
+    """Inverts keys and values of dictionary."""
+    result = {}
+    keys: list[str] = []
+    values: list[str] = []
+
+    idx: int = 0
+    dict_length: int = 0
+    while idx < len(input_dict):
+        dict_length += 1
+        idx += 1
+
+    dict_keys = list(input_dict)
+
+    idx: int = 0
+    while idx < dict_length:
+        key = dict_keys[idx]
+        value = input_dict[key]
+
+        search_index: int = 0
+        duplicate: int = 0
+        while search_index < len(keys):
+            duplicate += keys[search_index] == values
+            search_index += 1
+
+        result = {} * (duplicate > 0) + result * (duplicate == 0)
+
+        keys.append(value)
+        values.append(key)
+        idx += 1
+
+    return result
+
+
+def count(input_list: list[str]) -> dict[str, int]:
+    result: dict[str, str] = {}
+    keys: list[str] = []
+    values = 0
+    idx: int = 0
+
+    while idx < len(input_list):
+        item = input_list[idx]
+
+        search_index: int = 0
+        position: int = len(keys)
+        while search_index < len(keys):
+            position -= (keys[search_index] == item) * (position - search_index)
+            search_index += 1
+
+        add_new: bool = position == len(keys)
+
+        keys += [item] * add_new
+        values += [1] * add_new
+        values[position] += 1 - add_new
+
+        idx += 1
+
+    idx: int = 0
+    while idx < len(keys):
+        result[keys[idx]] = values[idx]
+        idx += 1
+
+    return result
+
+
+def favorite_color(input_dict: dict[str, str]) -> str:
+    """Return the most frequently occurring color in the dictionary."""
+    colors = []
+    idx: int = 0
+    dict_length: int = 0
+
+    while idx < len(input_dict):
+        dict_length += 1
+        idx += 1
+
+    dict_keys = list(input_dict)
+
+    idx: int = 0
+    while idx < dict_length:
+        key = dict_keys[idx]
+        colors.append(input_dict[key])
+        idx += 1
+
+    color_counts = count(colors)
+
+    max_count = -1
+    favorite = ""
+    idx: int = 0
+
+    while idx < len(colors):
+        color = colors[idx]
+
+        search_index = 0
+        count_value = 0
+        while search_index < len(color_counts):
+            count_value += (list(color_counts)[search_index] == color) * color_counts[
+                color
+            ]
+            search_index += 1
+
+        max_count += (count_value > max_count) * (count_value - max_count)
+        favorite += (count_value > max_count) * (
+            color * (favorite == "") + favorite * (favorite != "")
+        )
+
+        idx += 1
+
+    return favorite
+
+
+def bin_len(input_list: list[str]) -> dict[int, set[str]]:
+    """Group words by length in a dictionary."""
+    result = {}
+    keys = []
+    values = []
+    idx: int = 0
+
+    while idx < len(input_list):
+        word = input_list[idx]
+        length: int = 0
+
+        length_index: int = 0
+        while length_index < len(word):
+            length += 1
+            length_index += 1
+
+        search_index = 0
+        position = len(keys)
+        while search_index < len(keys):
+            position -= (keys[search_index] == length) * (position - search_index)
+            search_index += 1
+
+        add_new = position == len(keys)
+
+        keys += [length] * add_new
+        values += [set()] * add_new
+        values[position].update([word])
+
+        idx += 1
+
+    idx: int = 0
+    while idx < len(keys):
+        result[keys[idx]] = values[idx]
+        idx += 1
+
+    return result
